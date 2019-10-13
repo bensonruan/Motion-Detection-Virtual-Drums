@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Motion Detection</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel='stylesheet' type='text/css' media='screen' href='style/motion-detection.css'>
+    <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>  
+    <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="js/buffer-loader.js"></script>
+</head>
+<body>
+    <main>
+        <div class="app-panel">
+            <div class="form-control webcam-start" id="webcam-control">
+                    <label class="form-switch">
+                    <input type="checkbox" id="webcam-switch">
+                    <i></i> 
+                    <span id="webcam-caption">Start Webcam for Motion Detection</span>
+                    <button id="cameraFlip" class="btn d-none"></button>
+                    </label>                        
+            </div>
+            <div id="web-link">More on <a target="_blank" href="https://bensonruan.com">bensonruan.com</a></div>
+            <div class="webcam-container d-none">
+                <video id="webcam" autoplay width="640" height="480"></video>
+                <canvas id="canvas-source" width="640" height="480"></canvas>
+                <div class="motion-cam">
+                    <div class="motion-cam-title">Motion Cam</div>
+                    <canvas id="canvas-blended" width="640" height="480"></canvas>
+                </div>
+            </div>
+            <div class="drum-container">
+                <div class="row row-top">
+                    <div class="col-6 col-sm-3">
+                        <img class="virtual-drum" src="images/cymbal.png" name="crash" vd-id='0'>
+                    </div>
+                    <div class="col-6 col-sm-3 offset-sm-6">
+                        <img class="virtual-drum" src="images/hi-hat.png" name="hi-hat" vd-id='1'>
+                    </div>
+                </div>
+                <div class="row row-bottom">
+                    <div class="col-4 p-sm-3 p-0">
+                        <img class="virtual-drum" src="images/Floor-Tom.png" name="floor-tom" vd-id='2'>
+                        <div class="spinner-grow text-primary d-none" role="status" id="floor-tom-glowing">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
+                    <div class="col-5 p-sm-3 p-0">
+                        <img class="virtual-drum" src="images/Bass-Drum.png" name="kick" vd-id='3'>
+                        <div class="spinner-grow text-primary d-none" role="status" id="kick-glowing">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
+                    <div class="col-3 p-sm-3 p-0">
+                        <img class="virtual-drum" src="images/Snare.png" name="snare" vd-id='4'>
+                        <div class="spinner-grow text-primary d-none" role="status" id="snare-glowing">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src='js/motion-detection.js'></script>
+</body>
+</html>

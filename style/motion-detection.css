@@ -1,0 +1,279 @@
+body {
+    background-color: #000;
+    color: #fff;
+    margin: 0px;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.app-panel{
+    height: 100vh;
+    width: 100vw;
+    text-align: center;
+}
+
+
+.form-control {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    position: absolute;
+    width: auto;
+    z-index: 9999;
+}
+
+.form-control.webcam-start{
+    top:40vh; 
+    left:30vw;
+}
+
+.form-control.webcam-on {
+    -webkit-animation: webcam-on 0.5s linear forwards; 
+            animation: webcam-on 0.5s linear forwards;
+  }
+.form-control.webcam-off {
+    -webkit-animation: webcam-off 0.5s linear forwards; 
+            animation: webcam-off 0.5s linear forwards;
+  }
+  @media screen and (max-width: 767px) {
+    .form-control.webcam-start{
+        left:0; 
+        width: auto;
+        font-size: 1rem;
+    }
+    .form-control.webcam-on {
+        -webkit-animation: webcam-on-phone 0.5s linear forwards; 
+                animation: webcam-on-phone 0.5s linear forwards;
+      }
+    .form-control.webcam-off {
+        -webkit-animation: webcam-off-phone 0.5s linear forwards; 
+                animation: webcam-off-phone 0.5s linear forwards;
+      }
+  }
+
+  @-webkit-keyframes webcam-on {
+    from { top:40vh; left:30vw;}	
+    to   { top:0; left: 0;}	
+  }
+  @keyframes webcam-on {
+    from { top:40vh; left:30vw;}	
+    to   { top:0; left: 0; }	
+  }
+
+  @-webkit-keyframes webcam-off {
+    from { top:0; left: 0;}	
+    to   { top:40vh; left: 30vw; }	
+  }
+  @keyframes webcam-off {
+    from { top:0; left: 0;}	
+    to   { top:40vh; left: 30vw;}	
+  }
+  @-webkit-keyframes webcam-on-phone {
+    from { top:40vh;}	
+    to   { top:0;}	
+  }
+  @keyframes webcam-on-phone {
+    from { top:40vh;}	
+    to   { top:0;}	
+  }
+
+  @-webkit-keyframes webcam-off-phone {
+    from { top:0; }	
+    to   { top:40vh; }	
+  }
+  @keyframes webcam-off-phone {
+    from { top:0; }	
+    to   { top:40vh; }	
+  }
+
+  .form-switch {
+    display: inline-block;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  .form-switch i {
+    position: relative;
+    display: inline-block;
+    margin-right: .5rem;
+    width: 60px;
+    height: 30px;
+    background-color: #e6e6e6;
+    border-radius: 25px;
+    vertical-align: text-bottom;
+    transition: all 0.3s linear;
+  }
+  
+  .form-switch i::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 56px;
+    height: 25px;
+    background-color: #fff;
+    border-radius: 15px;
+    transform: translate3d(2px, 2px, 0) scale3d(1, 1, 1);
+    transition: all 0.25s linear;
+  }
+  
+  .form-switch i::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 26px;
+    height: 26px;
+    background-color: #fff;
+    border: 1px solid grey;
+    border-radius: 15px;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
+    transform: translate3d(2px, 2px, 0);
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .form-switch:active i::after {
+    width: 60px;
+    transform: translate3d(2px, 2px, 0);
+  }
+  
+  .form-switch:active input:checked + i::after { transform: translate3d(16px, 2px, 0); }
+  
+  .form-switch input { display: none; }
+  
+  .form-switch input:checked + i { background-color: #4BD763; }
+  
+  .form-switch input:checked + i::before { transform: translate3d(18px, 2px, 0) scale3d(0, 0, 0); }
+  
+  .form-switch input:checked + i::after { transform: translate3d(30px, 2px, 0); }
+
+  .form-switch input:disabled + i { background-color: #eeeeee; cursor: not-allowed; }
+
+  .form-switch input:disabled + i::after {
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.10);
+  }
+
+  #cameraFlip {
+    width: 60px;
+    height: 30px;
+    margin: -10px 0 0 10px;
+    cursor: pointer;
+    background-color: #ccc;
+    background-position : center center;
+    background-repeat:no-repeat;
+    background-image : url(../images/camera_flip.png);
+  }
+
+
+  .motion-cam-title {
+    position: absolute;
+    font-size: 16px;
+    color: #7C7C7C;
+    top: 5px;
+    width: 100%;
+    white-space: nowrap;
+  }
+
+  #webcam{
+    display: none;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -320px;
+    margin-top: -240px;
+  }
+  
+  #canvas-source{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: -100;
+    transform: translateX(-50%) translateY(-50%);
+    pointer-events: none;
+  }
+
+  #canvas-blended {
+    width: 100%;
+  }
+
+@media screen and (max-width: 576px) {
+    .motion-cam {
+        position: absolute;
+        top: 30vh;
+        right: 0;
+        width: 50%;
+        background-color: #000;
+    }
+}
+@media screen and (min-width: 576px)  {
+    .motion-cam {
+        position: absolute;
+        top: 0;
+        left: 35vw;
+        width: 30%;
+        background-color: #000;
+    }
+}
+
+
+  .drum-container{
+      width: 100vw;
+      height: 100vh;
+      top: 0;
+      left: 0;
+      position: absolute;
+  }
+
+  .drum-container img{
+      width: 100%;
+      opacity: 0.5;
+      filter: alpha(opacity=50);
+  }
+
+  .row{
+      position: absolute;
+      left: 0;
+      width: 100vw;
+      padding: 0;
+      margin: 0;
+  }
+
+  .row-top{
+      top: 0;
+  }
+
+  .row-bottom{
+      bottom: -20vh;
+  }
+  @media screen and (min-width: 1140px) {
+    .row-bottom{
+        bottom: -40vh;
+    }
+}
+  @media screen and (max-width: 576px) {
+    .row-bottom{
+        bottom: 15vh;
+    }
+}
+
+.spinner-grow{
+  position: absolute; 
+  width: 100%;
+  top:0;
+  left:0;
+}
+
+#web-link {
+  z-index: 999999;
+  left: 10px;
+  top: 10%;
+  position: absolute;
+}
+
+#web-link a {
+  color: white;
+  text-decoration: underline;
+}
