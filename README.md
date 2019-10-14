@@ -1,7 +1,7 @@
 # Motion Detection - Virtual Drums Playground
  Detect motions from webcam, play the virtual drums by waving your hands in the air.
  
- ![motion-detection](https://bensonruan.com/wp-content/uploads/2019/10/motion-detection-playing-virtual-drum.gif)
+![motion-detection](https://bensonruan.com/wp-content/uploads/2019/10/motion-detection-play-virtual-drums.jpg)
  
  ## Live Demo
 **[https://bensonruan.com/motion-detection-play-drums-with-webcam/](https://bensonruan.com/motion-detection-play-drums-with-webcam/)**
