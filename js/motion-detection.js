@@ -1,56 +1,39 @@
-let camera = $('#webcam')[0];
-let currentStream;
-let deviceIds = [];
-let selectedDevice;
+const webcamElement = document.getElementById('webcam');
+const webcam = new Webcam(webcamElement, 'user')
 let timeOut, lastImageData;
 let canvasSource = $("#canvas-source")[0];
 let canvasBlended = $("#canvas-blended")[0];
 let contextSource = canvasSource.getContext('2d');
 let contextBlended = canvasBlended.getContext('2d');
 let drums = {};
+const audioPath =  "sound"
 
 contextSource.translate(canvasSource.width, 0);
 contextSource.scale(-1, 1);
-    
+
+
+
 $("#webcam-switch").change(function () {
-    if(this.checked){
-        if (navigator.mediaDevices) {
-            navigator.mediaDevices.enumerateDevices().then(function(devices){
-              if(getDevices(devices)){
-                if(deviceIds.length>1){
-                  selectedDevice = deviceIds[1];
-                }else{
-                  selectedDevice = deviceIds[0];
-                }
-                startCamera();
-                loadSounds();
-              }else{
-                alert('No camera detected');
-              }
-            });
-          }else{
-            alert("Fail to start webcam");
-          }  
-    }
-    else {
-        stopMediaTracks(currentStream);
-        $("#webcam-control").removeClass("webcam-on");
-        $("#webcam-control").addClass("webcam-off");
-        $("#cameraFlip").addClass('d-none');
-        $(".webcam-container").addClass("d-none");
-        $("#webcam-caption").html("Start Webcam for Motion Detection");
-    }        
+  if(this.checked){
+      $('.md-modal').addClass('md-show');
+      webcam.start()
+          .then(result =>{
+            cameraStarted();
+            loadSounds();
+            startMotionDetection();
+          })
+          .catch(err => {
+              displayError();
+          });
+  }
+  else {        
+      $("#errorMsg").addClass("d-none");
+      webcam.stop();
+      cameraStopped();
+      setAllDrumReadyStatus(false);
+  }        
 });
 
-$('#cameraFlip').click(function() {
-    $.each(deviceIds, function( index, value ) {
-      if(value!=selectedDevice){
-        selectedDevice = value;
-        startCamera();
-        return false;
-      }
-    });
-});
 
 $('.virtual-drum').on('load', function () {
     var viewWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
@@ -68,64 +51,12 @@ $('.virtual-drum').on('load', function () {
 }).each(function() {
      if (this.complete) $(this).trigger('load');
 });
-
-function getDevices(mediaDevices) {
-    deviceIds = [];
-    let count = 0;
-    mediaDevices.forEach(mediaDevice => {
-      if (mediaDevice.kind === 'videoinput') {
-        deviceIds.push(mediaDevice.deviceId);
-        count = count + 1;
-      }
-    });
-    if(count>1){
-      $("#cameraFlip").removeClass('d-none');
-    }
-    return (count>0);
-}
   
-function startCamera(){
-    if (typeof currentStream !== 'undefined') {
-      stopMediaTracks(currentStream);
-    }
-    const videoConstraints = {};
-    if (selectedDevice === '') {
-      videoConstraints.facingMode = 'user';
-    } else {
-      videoConstraints.deviceId = { exact: selectedDevice};
-    }
-    const constraints = {
-      video: videoConstraints,
-      audio: false
-    };
-    navigator.mediaDevices
-      .getUserMedia(constraints)
-      .then(stream => {
-        currentStream = stream;
-        camera.srcObject = stream;
-        startMotionDetection();
-        return navigator.mediaDevices.enumerateDevices();
-      })
-      .then(getDevices)
-      .catch(error => {
-          alert("Fail to start webcam");
-      });
-}
-  
-function stopMediaTracks(stream) {
-    stream.getTracks().forEach(track => {
-      track.stop();
-    });
-}
 
-function startMotionDetection() {
-    $("#webcam-caption").html("on");
-    $("#webcam-control").removeClass("webcam-off");
-    $("#webcam-control").addClass("webcam-on");
-    $(".webcam-container").removeClass("d-none");
-    $(canvasBlended).delay(600).fadeIn(); 
-    $(".motion-cam").delay(600).fadeIn();
+function startMotionDetection() {   
+    setAllDrumReadyStatus(false);
     update();
+    setTimeout(setAllDrumReadyStatus, 1000, true);
 }
 
 var AudioContext = (
@@ -138,11 +69,11 @@ function loadSounds() {
   soundContext = new AudioContext();
   bufferLoader = new BufferLoader(soundContext,
     [
-      'sound/crash.mp3',
-      'sound/hi-hat.mp3',
-      'sound/floor-tom.mp3',
-      'sound/kick.mp3',
-      'sound/snare.mp3',
+      audioPath+'/Crash.mp3',
+      audioPath+'/Hi-Hat.mp3',
+      audioPath+'/Floor-Tom.mp3',
+      audioPath+'/Kick.mp3',
+      audioPath+'/Snare.mp3',
     ],
     finishedLoading
   );
@@ -159,15 +90,16 @@ function finishedLoading(bufferList) {
   }
 }
 
-function playSound(drum) {
+function playHover(drum) {
   if (!drum.ready) return;
   var source = soundContext.createBufferSource();
   source.buffer = drum.sound.buffer;
   source.connect(soundContext.destination);
   source.start(0);
   drum.ready = false;
+  playAnimate(drum);
   // throttle the note
-  setTimeout(setDrumReady, 400, drum);
+  setTimeout(setDrumReady, 500, drum);
 }
 
 function setDrumReady(drum) {
@@ -193,7 +125,7 @@ function update() {
 }
 
 function drawVideo() {
-    contextSource.drawImage(camera, 0, 0, camera.width, camera.height);
+    contextSource.drawImage(webcamElement, 0, 0, webcamElement.width, webcamElement.height);
 }
 
 function blend() {
@@ -240,37 +172,63 @@ function differenceAccuracy(target, data1, data2) {
 function checkAreas() {
     // loop over the drum areas
     for (var drumName in drums) {
-        var drum = drums[drumName]
-        var blendedData = contextBlended.getImageData(drum.x, drum.y, drum.width, drum.height);
-        var i = 0;
-        var average = 0;
-        // loop over the pixels
-        while (i < (blendedData.data.length * 0.25)) {
-            // make an average between the color channel
-            average += (blendedData.data[i*4] + blendedData.data[i*4+1] + blendedData.data[i*4+2]) / 3;
-            ++i;
-        }
-        // calculate an average between of the color values of the drum area
-        average = Math.round(average / (blendedData.data.length * 0.25));
-        if (average > 20) {
-            // over a small limit, consider that a movement is detected
-            // play a note and show a visual feedback to the user
-            console.log(drum.name + '-' + average)
-            playEffect(drum.name);    
-            playSound(drum);       
+        var drum = drums[drumName];
+        if(drum.x>0 || drum.y>0){
+          var blendedData = contextBlended.getImageData(drum.x, drum.y, drum.width, drum.height);
+          var i = 0;
+          var average = 0;
+          // loop over the pixels
+          while (i < (blendedData.data.length * 0.25)) {
+              // make an average between the color channel
+              average += (blendedData.data[i*4] + blendedData.data[i*4+1] + blendedData.data[i*4+2]) / 3;
+              ++i;
+          }
+          // calculate an average between of the color values of the drum area
+          average = Math.round(average / (blendedData.data.length * 0.25));
+          if (average > 20) {
+              // over a small limit, consider that a movement is detected
+              // play a note and show a visual feedback to the user
+              //console.log(drum.name + '-' + average)
+              playHover(drum);          
+          }
         }
     }
 }
 
-function playEffect(drumName){
-  if(drumName=="crash" || drumName=="hi-hat"){
-    $('[name="'+drumName+'"]').effect( "shake",{times:1,distance:5},'fast');
+function playAnimate(drum){
+  if(drum.name=="crash" || drum.name=="hi-hat"){
+    $('[name="'+drum.name+'"]').effect( "shake",{times:1,distance:5},'fast');
   }
   else{
-    var glowing = $("#"+drumName+"-glowing");
+    var glowing = $("#"+drum.name+"-glowing");
     glowing.removeClass("d-none");
     glowing.height(glowing[0].clientWidth);
     setTimeout(function(){ glowing.addClass("d-none"); }, 500);
   }
-  
+}
+
+function setAllDrumReadyStatus(isReady){
+  for (var drumName in drums) {
+    drums[drumName].ready = isReady;
+  }
+}
+
+function cameraStarted(){
+  $("#errorMsg").addClass("d-none");
+  $("#webcam-caption").html("on");
+  $("#webcam-control").removeClass("webcam-off");
+  $("#webcam-control").addClass("webcam-on");
+  $(".webcam-container").removeClass("d-none");
+  $(canvasBlended).delay(600).fadeIn(); 
+  $(".motion-cam").delay(600).fadeIn();
+  $("#wpfront-scroll-top-container").addClass("d-none");
+}
+
+function cameraStopped(){
+  $("#errorMsg").addClass("d-none");
+  $("#webcam-control").removeClass("webcam-on");
+  $("#webcam-control").addClass("webcam-off");
+  $(".webcam-container").addClass("d-none");
+  $("#webcam-caption").html("Click to Start Webcam");
+  $('.md-modal').removeClass('md-show');
 }

@@ -1,9 +1,7 @@
-body {
-    background-color: #000;
-    color: #fff;
-    margin: 0px;
-    height: 100vh;
-    overflow: hidden;
+main {
+  width: 100vw;
+  height: 100vh;
+  background: black;
 }
 
 .app-panel{
@@ -12,80 +10,54 @@ body {
     text-align: center;
 }
 
-
-.form-control {
+.form-control.webcam-start{
+    top: 50px; 
+    left: 0;
+    right: 0;
+    width: 300px;
+    margin: auto;
+    position: absolute;
     background: transparent;
     border: none;
     color: white;
-    font-size: 1.5rem;
-    position: absolute;
-    width: auto;
+    font-size: 1.2rem;
     z-index: 9999;
 }
 
-.form-control.webcam-start{
-    top:40vh; 
-    left:30vw;
-}
-
 .form-control.webcam-on {
-    -webkit-animation: webcam-on 0.5s linear forwards; 
-            animation: webcam-on 0.5s linear forwards;
+    position: fixed;
+    left: 8vw;
+    top: 0;
+    transition: all 700ms;
   }
 .form-control.webcam-off {
-    -webkit-animation: webcam-off 0.5s linear forwards; 
-            animation: webcam-off 0.5s linear forwards;
+    top: 50px;
+    transition: all 700ms;
   }
-  @media screen and (max-width: 767px) {
+  @media screen and (max-width: 576px) {
+    main {
+      height: 300px;
+    }
     .form-control.webcam-start{
-        left:0; 
+        left:20%; 
         width: auto;
         font-size: 1rem;
+        margin-top:40%;
     }
     .form-control.webcam-on {
-        -webkit-animation: webcam-on-phone 0.5s linear forwards; 
-                animation: webcam-on-phone 0.5s linear forwards;
+        position: fixed;
+        margin-top: 0;
+        top: 20vw;
+        left: 0;
+        transition: all 700ms;
       }
     .form-control.webcam-off {
-        -webkit-animation: webcam-off-phone 0.5s linear forwards; 
-                animation: webcam-off-phone 0.5s linear forwards;
+       left: 20%;
+       margin-top:40%;
+       transition: all 700ms;
       }
   }
-
-  @-webkit-keyframes webcam-on {
-    from { top:40vh; left:30vw;}	
-    to   { top:0; left: 0;}	
-  }
-  @keyframes webcam-on {
-    from { top:40vh; left:30vw;}	
-    to   { top:0; left: 0; }	
-  }
-
-  @-webkit-keyframes webcam-off {
-    from { top:0; left: 0;}	
-    to   { top:40vh; left: 30vw; }	
-  }
-  @keyframes webcam-off {
-    from { top:0; left: 0;}	
-    to   { top:40vh; left: 30vw;}	
-  }
-  @-webkit-keyframes webcam-on-phone {
-    from { top:40vh;}	
-    to   { top:0;}	
-  }
-  @keyframes webcam-on-phone {
-    from { top:40vh;}	
-    to   { top:0;}	
-  }
-
-  @-webkit-keyframes webcam-off-phone {
-    from { top:0; }	
-    to   { top:40vh; }	
-  }
-  @keyframes webcam-off-phone {
-    from { top:0; }	
-    to   { top:40vh; }	
-  }
+  
 
   .form-switch {
     display: inline-block;
@@ -155,12 +127,13 @@ body {
   #cameraFlip {
     width: 60px;
     height: 30px;
-    margin: -10px 0 0 10px;
+    display: block;
+    margin: 10px 0 0 0;
     cursor: pointer;
-    background-color: #ccc;
+    background-color: white;
     background-position : center center;
     background-repeat:no-repeat;
-    background-image : url(../images/camera_flip.png);
+    background-image : url(../images//camera_flip.png);
   }
 
 
@@ -174,15 +147,22 @@ body {
   }
 
   #webcam{
-    display: none;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    margin-left: -320px;
-    margin-top: -240px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: -100;
+    transform: rotateY(180deg);
+    pointer-events: none;
+    -webkit-transform:rotateY(180deg); /* Safari and Chrome */
+    -moz-transform:rotateY(180deg); /* Firefox */
   }
   
   #canvas-source{
+    display: none;
     position: fixed;
     top: 50%;
     left: 50%;
@@ -202,10 +182,14 @@ body {
 @media screen and (max-width: 576px) {
     .motion-cam {
         position: absolute;
-        top: 30vh;
-        right: 0;
-        width: 50%;
+        bottom: 23vh;
+        left: 0;
+        width: 30%;
         background-color: #000;
+    }
+
+    .motion-cam-title {
+      font-size: 12px;
     }
 }
 @media screen and (min-width: 576px)  {
@@ -227,13 +211,26 @@ body {
       position: absolute;
   }
 
+  .drum-background{
+    width: 100vw;
+    position: relative;
+    height: 100vh;
+    overflow: hidden;
+    background: black;
+  }
+
   .drum-container img{
       width: 100%;
       opacity: 0.5;
       filter: alpha(opacity=50);
   }
+  .drum-background img{
+      width: 100%;
+      opacity: 0.5;
+      filter: alpha(opacity=50);
+  }
 
-  .row{
+  .app-panel .row{
       position: absolute;
       left: 0;
       width: 100vw;
@@ -241,21 +238,31 @@ body {
       margin: 0;
   }
 
-  .row-top{
+  .app-panel .row-top{
       top: 0;
   }
 
-  .row-bottom{
-      bottom: -20vh;
+  .app-panel .row-bottom{
+      bottom: 0;
   }
   @media screen and (min-width: 1140px) {
-    .row-bottom{
-        bottom: -40vh;
+    .app-panel .row-bottom{
+        bottom: -20vh;
     }
 }
   @media screen and (max-width: 576px) {
-    .row-bottom{
-        bottom: 15vh;
+    .app-panel .row-bottom{
+      top: 0;
+      margin-left: 60%;
+      margin-top: -35px;
+    }
+    .app-panel .row-top{
+      top: 0;
+    }
+    .drum-background .row-bottom{
+      left: 60%;
+      position: relative;
+      top: -180px;
     }
 }
 
@@ -276,4 +283,90 @@ body {
 #web-link a {
   color: white;
   text-decoration: underline;
+}
+
+
+.md-modal {
+  margin: auto;
+	position: fixed;
+	top: 0;
+	left: 0;
+  right: 0;
+	width: 100vw;
+	height: 100vh;
+	z-index: 2000;
+	visibility: hidden;
+	-webkit-backface-visibility: hidden;
+	-moz-backface-visibility: hidden;
+	backface-visibility: hidden;
+}
+
+.md-show {
+	visibility: visible;
+}
+
+.md-overlay {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	visibility: hidden;
+	top: 0;
+	left: 0;
+	z-index: 1000;
+	opacity: 0;
+	background: rgba(#e4f0e3, 0.8);
+	-webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+	transition: all 0.3s;
+}
+
+.md-show ~ .md-overlay {
+	opacity: 1;
+	visibility: visible;
+}
+
+.md-effect-12 .md-content {
+	-webkit-transform: scale(0.8);
+	-moz-transform: scale(0.8);
+	-ms-transform: scale(0.8);
+	transform: scale(0.8);
+	opacity: 0;
+	-webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+	transition: all 0.3s;
+}
+
+.md-show.md-effect-12 ~ .md-overlay {
+	background-color: #e4f0e3;
+} 
+
+.md-effect-12 .md-content h3,
+.md-effect-12 .md-content {
+	background: transparent;
+}
+
+.md-show.md-effect-12 .md-content {
+	-webkit-transform: scale(1);
+	-moz-transform: scale(1);
+	-ms-transform: scale(1);
+	transform: scale(1);
+	opacity: 1;
+}
+
+#errorMsg {
+  position: fixed;
+  top: 20vh;
+  left: 0;
+  padding: 20px;
+  z-index: 999999;
+}
+
+@media screen and (min-width: 768px) {
+ #errorMsg {
+     position: fixed;
+     top: 30vh;
+     left: 20vw;
+     padding: 20px;
+     z-index: 999999;
+ }
 }
