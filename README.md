@@ -29,3 +29,5 @@ Please note that on iOS Safari, cameras can only be accessed via the https proto
 * [jquery](https://code.jquery.com/jquery-3.3.1.min.js) - JQuery
 * [magic-xylophone](https://github.com/soundstep/magic-xylophone) - A javascript motion detection experiment.
 
+## Support me 
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/W7W6METMY)
