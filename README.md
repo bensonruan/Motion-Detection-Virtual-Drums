@@ -4,7 +4,7 @@
  ## Live Demo
 **[https://bensonruan.com/motion-detection-javascript-play-drums-with-webcam/](https://bensonruan.com/motion-detection-javascript-play-drums-with-webcam/)**
 
-![motion-detection](https://bensonruan.com/wp-content/uploads/2019/10/motion-detection-play-virtual-drums.jpg)
+![motion-detection](https://bensonruan.com/wp-content/webp-express/webp-images/uploads/2019/10/motion-detection-playing-virtual-drum.webp)
 
 
 ## Installing
